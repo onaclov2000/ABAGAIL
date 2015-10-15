@@ -26,6 +26,7 @@ import opt.prob.MIMIC;
 import opt.prob.ProbabilisticOptimizationProblem;
 import shared.FixedIterationTrainer;
 
+
 /**
  * Copied from ContinuousPeaksTest
  * @version 1.0

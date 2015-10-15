@@ -72,4 +72,3 @@ public class FourPeaksTest {
         System.out.println("MIMIC: " + ef.value(mimic.getOptimal()));
     }
 }
-

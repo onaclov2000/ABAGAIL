@@ -104,26 +104,19 @@ public class AbaloneTest {
         }
     }
 
-    private static Instance[] initializeInstances(String dataFile) {
-        DataSetReader dsr = new CSVDataSetReader(new File("").getAbsolutePath() + "/src/opt/test/" + dataFile);
+     private static Instance[] initializeInstances(String dataFile) {
+
+        System.out.println(new File("").getAbsolutePath() + "\\src\\opt\\test\\" + dataFile);
+        DataSetReader dsr = new CSVDataSetReader(new File("").getAbsolutePath() + "\\src\\opt\\test\\" + dataFile);
         DataSet ds;
         DataSet labs;
 
         try {
-            ds = dsr.read();
-            labs = lsr.read();
-            Instance[] instances = ds.getInstances();
-            Instance[] labels = labs.getInstances();
-
-            for(int i = 0; i < instances.length; i++) {
-                instances[i].setLabel(new Instance(labels[i].getData().get(0)));
-            }
-
-            return instances;
+            ds = dsr.read(1);
+            return ds.getInstances();
         } catch (Exception e) {
             System.out.println("Failed to read input file");
             return null;
         }
-       
     }
 }

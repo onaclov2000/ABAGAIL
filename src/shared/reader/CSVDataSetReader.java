@@ -42,5 +42,31 @@ public class CSVDataSetReader extends DataSetReader {
         set.setDescription(new DataSetDescription(set));
         return set;
 	}
+	
+        public DataSet read(int label) throws Exception {
+        BufferedReader br = new BufferedReader(new FileReader(file));
 
+        String line;
+        List<Instance> data = new ArrayList<Instance>();
+        Pattern pattern = Pattern.compile("[ ,]+");
+
+        while ((line = br.readLine()) != null) {
+            String[] split = pattern.split(line.trim());
+            double[] input = new double[split.length-1];
+            
+            for (int i = 0; i < input.length; i++) {
+                input[i] = Double.parseDouble(split[i]);
+            }
+            Instance instance = new Instance(new DenseVector(input), new Instance(Integer.parseInt(split[split.length-1])));
+            data.add(instance);
+            
+        }
+        
+        br.close();
+        
+        Instance[] instances = (Instance[]) data.toArray(new Instance[0]);
+        DataSet set = new DataSet(instances);
+        set.setDescription(new DataSetDescription(set));
+        return set;
+	}
 }

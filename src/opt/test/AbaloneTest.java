@@ -104,39 +104,26 @@ public class AbaloneTest {
         }
     }
 
-    private static Instance[] initializeInstances() {
-
-        double[][][] attributes = new double[4177][][];
+    private static Instance[] initializeInstances(String dataFile) {
+        DataSetReader dsr = new CSVDataSetReader(new File("").getAbsolutePath() + "/src/opt/test/" + dataFile);
+        DataSet ds;
+        DataSet labs;
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader(new File("src/opt/test/abalone.txt")));
+            ds = dsr.read();
+            labs = lsr.read();
+            Instance[] instances = ds.getInstances();
+            Instance[] labels = labs.getInstances();
 
-            for(int i = 0; i < attributes.length; i++) {
-                Scanner scan = new Scanner(br.readLine());
-                scan.useDelimiter(",");
-
-                attributes[i] = new double[2][];
-                attributes[i][0] = new double[7]; // 7 attributes
-                attributes[i][1] = new double[1];
-
-                for(int j = 0; j < 7; j++)
-                    attributes[i][0][j] = Double.parseDouble(scan.next());
-
-                attributes[i][1][0] = Double.parseDouble(scan.next());
+            for(int i = 0; i < instances.length; i++) {
+                instances[i].setLabel(new Instance(labels[i].getData().get(0)));
             }
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
 
-        Instance[] instances = new Instance[attributes.length];
-
-        for(int i = 0; i < instances.length; i++) {
-            instances[i] = new Instance(attributes[i][0]);
-            // classifications range from 0 to 30; split into 0 - 14 and 15 - 30
-            instances[i].setLabel(new Instance(attributes[i][1][0] < 15 ? 0 : 1));
+            return instances;
+        } catch (Exception e) {
+            System.out.println("Failed to read input file");
+            return null;
         }
-
-        return instances;
+       
     }
 }

@@ -49,21 +49,44 @@ public class FourPeaksTest {
         HillClimbingProblem hcp = new GenericHillClimbingProblem(ef, odd, nf);
         GeneticAlgorithmProblem gap = new GenericGeneticAlgorithmProblem(ef, odd, mf, cf);
         ProbabilisticOptimizationProblem pop = new GenericProbabilisticOptimizationProblem(ef, odd, df);
-        
-        RandomizedHillClimbing rhc = new RandomizedHillClimbing(hcp);      
-        FixedIterationTrainer fit = new FixedIterationTrainer(rhc, 200000); // original 200000
-        fit.train();
-        System.out.println("RHC: " + ef.value(rhc.getOptimal()));
-        
-        SimulatedAnnealing sa = new SimulatedAnnealing(1E11, .95, hcp);
-        fit = new FixedIterationTrainer(sa, 200000);
-        fit.train();
-        System.out.println("SA: " + ef.value(sa.getOptimal()));
-        
-        StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(200, 100, 10, gap);
-        fit = new FixedIterationTrainer(ga, 1000);
-        fit.train();
-        System.out.println("GA: " + ef.value(ga.getOptimal()));
+        double result[] = new double[100];
+        double temperature[] = new double[100];
+        double cooling[] = new double[100];
+        for (int i=0; i<100; i++){
+            RandomizedHillClimbing rhc = new RandomizedHillClimbing(hcp);      
+            FixedIterationTrainer fit = new FixedIterationTrainer(rhc, 200000); // original 200000
+            fit.train();
+            result[1] = ef.value(rhc.getOptimal());
+        }
+        System.out.println("RHC: " + Array.toString(results));
+        for (int i=0; i<100; i++){
+            temperature[i] = random.nextDouble() * 2E11;
+            cooling[i] = random.nextDouble();
+            SimulatedAnnealing sa = new SimulatedAnnealing(temperature[i], cooling[i], hcp);
+            fit = new FixedIterationTrainer(sa, 200000);
+            fit.train();
+            result[i] = ef.value(sa.getOptimal());
+        }
+        System.out.println("SA: " + Array.toString(results));
+        System.out.println("T: " + Array.toString(temperature));
+        System.out.println("SA: " + Array.toString(cooling));
+        int populationSize[] = new int[100];
+        int toMate[] = new int[100];
+        int toMutate[] = new int[100];
+        for (int i=0; i<100; i++){
+            //int populationSize, int toMate, int toMutate
+            populationSize[i] = random.nextInt(500);
+            toMate[i] = random.nextInt(500);
+            toMutate[i] = random.nextInt(50);
+            StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(populationSize[i], toMate[i], toMutate[i], gap);
+            fit = new FixedIterationTrainer(ga, 1000);
+            fit.train();
+            results[i] = ef.value(ga.getOptimal());
+        }
+        System.out.println("GA: " + Array.toString(results));
+        System.out.println("populationSize: " + Array.toString(populationSize));
+        System.out.println("toMate: " + Array.toString(toMate));
+        System.out.println("toMutate: " + Array.toString(toMutate));
         
         MIMIC mimic = new MIMIC(200, 20, pop);
         fit = new FixedIterationTrainer(mimic, 1000);

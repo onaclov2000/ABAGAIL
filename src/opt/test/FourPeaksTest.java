@@ -1,6 +1,7 @@
 package opt.test;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import dist.DiscreteDependencyTree;
 import dist.DiscreteUniformDistribution;
@@ -39,6 +40,7 @@ public class FourPeaksTest {
     
     public static void main(String[] args) {
         int[] ranges = new int[N];
+	Random random = new Random();
         Arrays.fill(ranges, 2);
         EvaluationFunction ef = new FourPeaksEvaluationFunction(T);
         Distribution odd = new DiscreteUniformDistribution(ranges);
@@ -59,7 +61,7 @@ public class FourPeaksTest {
             fit.train();
             result[1] = ef.value(rhc.getOptimal());
         }
-        System.out.println("RHC: " + Array.toString(result));
+        System.out.println("RHC: " + Arrays.toString(result));
         for (int i=0; i<100; i++){
             temperature[i] = random.nextDouble() * 2E11;
             cooling[i] = random.nextDouble();
@@ -68,9 +70,9 @@ public class FourPeaksTest {
             fit.train();
             result[i] = ef.value(sa.getOptimal());
         }
-        System.out.println("SA: " + Array.toString(result));
-        System.out.println("T: " + Array.toString(temperature));
-        System.out.println("C: " + Array.toString(cooling));
+        System.out.println("SA: " + Arrays.toString(result));
+        System.out.println("T: " + Arrays.toString(temperature));
+        System.out.println("C: " + Arrays.toString(cooling));
         
         
         int populationSize[] = new int[100];
@@ -85,12 +87,12 @@ public class FourPeaksTest {
             StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(populationSize[i], toMate[i], toMutate[i], gap);
             fit = new FixedIterationTrainer(ga, 1000);
             fit.train();
-            results[i] = ef.value(ga.getOptimal());
+            result[i] = ef.value(ga.getOptimal());
         }
-        System.out.println("GA: " + Array.toString(results));
-        System.out.println("populationSize: " + Array.toString(populationSize));
-        System.out.println("toMate: " + Array.toString(toMate));
-        System.out.println("toMutate: " + Array.toString(toMutate));
+        System.out.println("GA: " + Arrays.toString(result));
+        System.out.println("populationSize: " + Arrays.toString(populationSize));
+        System.out.println("toMate: " + Arrays.toString(toMate));
+        System.out.println("toMutate: " + Arrays.toString(toMutate));
         
         
         MIMIC mimic = new MIMIC(200, 20, pop);

@@ -116,7 +116,7 @@ public class FourPeaksTest {
 	for (int i = 0; i < 100; i++){
 		double start = System.nanoTime();
 		samples[i] = random.nextInt();
-		tokeep[i] = random.nextInt(samples[i].length + 1);
+		tokeep[i] = random.nextInt(samples[i] + 1);
 	        MIMIC mimic = new MIMIC(samples[i], tokeep[i], pop);
   	     	fit = new FixedIterationTrainer(mimic, 1000);
    	    	fit.train();

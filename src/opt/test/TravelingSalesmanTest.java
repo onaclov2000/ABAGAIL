@@ -99,7 +99,7 @@ public class TravelingSalesmanTest {
             populationSize[i] = random.nextInt(500) + 2;
             toMate[i] = random.nextInt(populationSize[i]);
             toMutate[i] = random.nextInt(10);
-            StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(populationSize[i], toMate[i], toMutate[i], gap)
+            StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(populationSize[i], toMate[i], toMutate[i], gap);
             fit = new FixedIterationTrainer(ga, 1000);
             fit.train();
             result[i] = ef.value(ga.getOptimal());
@@ -128,7 +128,7 @@ public class TravelingSalesmanTest {
 	for (int i = 0; i < 100; i++){
 double start = System.nanoTime();
 		samples[i] = random.nextInt();
-		tokeep[i] = random.nextInt(samples[i].length + 1);
+		tokeep[i] = random.nextInt(samples[i] + 1);
 	        MIMIC mimic = new MIMIC(samples[i], tokeep[i], pop);        
 fit = new FixedIterationTrainer(mimic, 1000);
             fit.train();

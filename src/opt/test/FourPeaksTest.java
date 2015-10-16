@@ -49,12 +49,13 @@ public class FourPeaksTest {
         HillClimbingProblem hcp = new GenericHillClimbingProblem(ef, odd, nf);
         GeneticAlgorithmProblem gap = new GenericGeneticAlgorithmProblem(ef, odd, mf, cf);
         ProbabilisticOptimizationProblem pop = new GenericProbabilisticOptimizationProblem(ef, odd, df);
+        FixedIterationTrainer fit = null;
         double result[] = new double[100];
         double temperature[] = new double[100];
         double cooling[] = new double[100];
         for (int i=0; i<100; i++){
             RandomizedHillClimbing rhc = new RandomizedHillClimbing(hcp);      
-            FixedIterationTrainer fit = new FixedIterationTrainer(rhc, 200000); // original 200000
+            fit = new FixedIterationTrainer(rhc, 200000); // original 200000
             fit.train();
             result[1] = ef.value(rhc.getOptimal());
         }

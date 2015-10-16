@@ -70,9 +70,12 @@ public class FourPeaksTest {
         System.out.println("SA: " + Array.toString(result));
         System.out.println("T: " + Array.toString(temperature));
         System.out.println("C: " + Array.toString(cooling));
+        
+        
         int populationSize[] = new int[100];
         int toMate[] = new int[100];
         int toMutate[] = new int[100];
+        
         for (int i=0; i<100; i++){
             //int populationSize, int toMate, int toMutate
             populationSize[i] = random.nextInt(500);

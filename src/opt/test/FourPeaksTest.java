@@ -91,6 +91,7 @@ public class FourPeaksTest {
         System.out.println("toMate: " + Array.toString(toMate));
         System.out.println("toMutate: " + Array.toString(toMutate));
         
+        
         MIMIC mimic = new MIMIC(200, 20, pop);
         fit = new FixedIterationTrainer(mimic, 1000);
         fit.train();

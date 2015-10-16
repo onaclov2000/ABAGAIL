@@ -58,7 +58,7 @@ public class FourPeaksTest {
             fit.train();
             result[1] = ef.value(rhc.getOptimal());
         }
-        System.out.println("RHC: " + Array.toString(results));
+        System.out.println("RHC: " + Array.toString(result));
         for (int i=0; i<100; i++){
             temperature[i] = random.nextDouble() * 2E11;
             cooling[i] = random.nextDouble();
@@ -67,9 +67,9 @@ public class FourPeaksTest {
             fit.train();
             result[i] = ef.value(sa.getOptimal());
         }
-        System.out.println("SA: " + Array.toString(results));
+        System.out.println("SA: " + Array.toString(result));
         System.out.println("T: " + Array.toString(temperature));
-        System.out.println("SA: " + Array.toString(cooling));
+        System.out.println("C: " + Array.toString(cooling));
         int populationSize[] = new int[100];
         int toMate[] = new int[100];
         int toMutate[] = new int[100];

@@ -6,6 +6,7 @@ import opt.example.*;
 import opt.ga.*;
 import shared.*;
 import func.nn.backprop.*;
+import func.nn.activation.*;
 import shared.DataSet;
 import shared.DataSetDescription;
 import shared.reader.CSVDataSetReader;
@@ -24,14 +25,15 @@ import java.text.*;
  * @version 1.0
  */
 public class AbaloneTest {
-    private static Instance[] instances = initializeInstances("abalone.txt");
+    private static Instance[] trainInstances = initializeInstances("Curious_George_train_features_100_percent.csv");
+    private static Instance[] testInstances = initializeInstances("Curious_George_test_features.csv");
 
-    private static int inputLayer = 7, hiddenLayer = 5, outputLayer = 1, trainingIterations = 1000;
+    private static int inputLayer = 12, hiddenLayer = 6, outputLayer = 1;
     private static BackPropagationNetworkFactory factory = new BackPropagationNetworkFactory();
     
     private static ErrorMeasure measure = new SumOfSquaresError();
 
-    private static DataSet set = new DataSet(instances);
+    private static DataSet set = new DataSet(trainInstances);
 
     private static BackPropagationNetwork networks[] = new BackPropagationNetwork[3];
     private static NeuralNetworkOptimizationProblem[] nnop = new NeuralNetworkOptimizationProblem[3];
@@ -43,9 +45,12 @@ public class AbaloneTest {
     private static DecimalFormat df = new DecimalFormat("0.000");
 
     public static void main(String[] args) {
+        int it = args.length > 0 ? Integer.parseInt(args[0]): 1000;
+
         for(int i = 0; i < oa.length; i++) {
             networks[i] = factory.createClassificationNetwork(
-                new int[] {inputLayer, hiddenLayer, outputLayer});
+                new int[] {inputLayer, hiddenLayer, outputLayer},
+                new LogisticSigmoid());
             nnop[i] = new NeuralNetworkOptimizationProblem(set, networks[i], measure);
         }
 
@@ -54,9 +59,13 @@ public class AbaloneTest {
         oa[2] = new StandardGeneticAlgorithm(200, 100, 10, nnop[2]);
 
         for(int i = 0; i < oa.length; i++) {
+
             double start = System.nanoTime(), end, trainingTime, testingTime, correct = 0, incorrect = 0;
-            train(oa[i], networks[i], oaNames[i]); //trainer.train();
+            for(int j = 0; j < it; j++) {
+                oa[i].train();
+            }
             end = System.nanoTime();
+
             trainingTime = end - start;
             trainingTime /= Math.pow(10,9);
 
@@ -65,11 +74,11 @@ public class AbaloneTest {
 
             double predicted, actual;
             start = System.nanoTime();
-            for(int j = 0; j < instances.length; j++) {
-                networks[i].setInputValues(instances[j].getData());
+            for(int j = 0; j < trainInstances.length; j++) {
+                networks[i].setInputValues(trainInstances[j].getData());
                 networks[i].run();
 
-                predicted = Double.parseDouble(instances[j].getLabel().toString());
+                predicted = Double.parseDouble(trainInstances[j].getLabel().toString());
                 actual = Double.parseDouble(networks[i].getOutputValues().toString());
 
                 double trash = Math.abs(predicted - actual) < 0.5 ? correct++ : incorrect++;
@@ -77,41 +86,45 @@ public class AbaloneTest {
             }
             end = System.nanoTime();
             testingTime = end - start;
-            testingTime /= Math.pow(10,9);
 
-            results +=  "\nResults for " + oaNames[i] + ": \nCorrectly classified " + correct + " instances." +
-                        "\nIncorrectly classified " + incorrect + " instances.\nPercent correctly classified: "
-                        + df.format(correct/(correct+incorrect)*100) + "%\nTraining time: " + df.format(trainingTime)
-                        + " seconds\nTesting time: " + df.format(testingTime) + " seconds\n";
-        }
+            results +=  oaNames[i] + "," + it + "," + df.format(incorrect / (correct + incorrect)) + ","; 
 
-        System.out.println(results);
-    }
+            correct = 0;
+            incorrect = 0;
+            start = System.nanoTime();
+            for(int j = 0; j < testInstances.length; j++) {
+                networks[i].setInputValues(testInstances[j].getData());
+                networks[i].run();
 
-    private static void train(OptimizationAlgorithm oa, BackPropagationNetwork network, String oaName) {
-        System.out.println("\nError results for " + oaName + "\n---------------------------");
+                predicted = Double.parseDouble(testInstances[j].getLabel().toString());
+                actual = Double.parseDouble(networks[i].getOutputValues().toString());
 
-        for(int i = 0; i < trainingIterations; i++) {
-            oa.train();
+                double trash = Math.abs(predicted - actual) < 0.5 ? correct++ : incorrect++;
 
-            double error = 0;
-            for(int j = 0; j < instances.length; j++) {
-                network.setInputValues(instances[j].getData());
-                network.run();
-
-                Instance output = instances[j].getLabel(), example = new Instance(network.getOutputValues());
-                example.setLabel(new Instance(Double.parseDouble(network.getOutputValues().toString())));
-                error += measure.value(output, example);
             }
+            end = System.nanoTime();
+            testingTime += end - start;
+            testingTime /= 2.0;
+            testingTime /= Math.pow(10, 9);
+            String weights = "";
+	    double weights_d[] = networks[i].getWeights();
+            for (int x = 0; x < weights_d.length-1; x++)
+            {
+   		weights += df.format(weights_d[i]) + ",";
+            }
+   		weights += df.format(weights_d[weights_d.length-1]) + ",";
+            results += df.format(incorrect / (correct + incorrect)) + ","
+                     + df.format(trainingTime) + "," + df.format(testingTime) + "\n" + weights + "\n";
 
-            System.out.println(df.format(error));
         }
+
+        System.out.print(results);
     }
 
     private static Instance[] initializeInstances(String dataFile) {
 
-        System.out.println(new File("").getAbsolutePath() + "\\src\\opt\\test\\" + dataFile);
-        DataSetReader dsr = new CSVDataSetReader(new File("").getAbsolutePath() + "\\src\\opt\\test\\" + dataFile);
+        System.out.println(new File("").getAbsolutePath() + "/src/opt/test/" + dataFile);
+        DataSetReader dsr = new CSVDataSetReader(new File("").getAbsolutePath() + "/src/opt/test/" + dataFile);
         DataSet ds;
         DataSet labs;
 

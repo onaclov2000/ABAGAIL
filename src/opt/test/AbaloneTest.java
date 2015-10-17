@@ -28,7 +28,7 @@ public class AbaloneTest {
     private static Instance[] trainInstances = initializeInstances("Curious_George_train_features_100_percent.csv");
     private static Instance[] testInstances = initializeInstances("Curious_George_test_features.csv");
 
-    private static int inputLayer = 12, hiddenLayer = 6, outputLayer = 1;
+    private static int inputLayer = 6, hiddenLayer = 0, outputLayer = 1;
     private static BackPropagationNetworkFactory factory = new BackPropagationNetworkFactory();
     
     private static ErrorMeasure measure = new SumOfSquaresError();
@@ -71,7 +71,6 @@ public class AbaloneTest {
 
             Instance optimalInstance = oa[i].getOptimal();
             networks[i].setWeights(optimalInstance.getData());
-
             double predicted, actual;
             start = System.nanoTime();
             for(int j = 0; j < trainInstances.length; j++) {
@@ -101,20 +100,15 @@ public class AbaloneTest {
 
                 double trash = Math.abs(predicted - actual) < 0.5 ? correct++ : incorrect++;
 
+
             }
             end = System.nanoTime();
             testingTime += end - start;
             testingTime /= 2.0;
             testingTime /= Math.pow(10, 9);
-            String weights = "";
-	    double weights_d[] = networks[i].getWeights();
-            for (int x = 0; x < weights_d.length-1; x++)
-            {
-   		weights += df.format(weights_d[i]) + ",";
-            }
-   		weights += df.format(weights_d[weights_d.length-1]) + ",";
+
             results += df.format(incorrect / (correct + incorrect)) + ","
-                     + df.format(trainingTime) + "," + df.format(testingTime) + "\n" + weights + "\n";
+                     + df.format(trainingTime) + "," + df.format(testingTime) + "," + optimalInstance.getData().toString() + "\n";
 
         }
 

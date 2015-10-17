@@ -6,6 +6,10 @@ import opt.example.*;
 import opt.ga.*;
 import shared.*;
 import func.nn.backprop.*;
+import shared.DataSet;
+import shared.DataSetDescription;
+import shared.reader.CSVDataSetReader;
+import shared.reader.DataSetReader;
 
 import java.util.*;
 import java.io.*;
@@ -20,7 +24,7 @@ import java.text.*;
  * @version 1.0
  */
 public class AbaloneTest {
-    private static Instance[] instances = initializeInstances();
+    private static Instance[] instances = initializeInstances("abalone.txt");
 
     private static int inputLayer = 7, hiddenLayer = 5, outputLayer = 1, trainingIterations = 1000;
     private static BackPropagationNetworkFactory factory = new BackPropagationNetworkFactory();
@@ -104,7 +108,7 @@ public class AbaloneTest {
         }
     }
 
-     private static Instance[] initializeInstances(String dataFile) {
+    private static Instance[] initializeInstances(String dataFile) {
 
         System.out.println(new File("").getAbsolutePath() + "\\src\\opt\\test\\" + dataFile);
         DataSetReader dsr = new CSVDataSetReader(new File("").getAbsolutePath() + "\\src\\opt\\test\\" + dataFile);

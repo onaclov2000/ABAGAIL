@@ -32,5 +32,6 @@ public abstract class DataSetReader {
      * @return the data 
      */
     public abstract DataSet read() throws Exception;
+    public abstract DataSet read(int label) throws Exception;
 
 }

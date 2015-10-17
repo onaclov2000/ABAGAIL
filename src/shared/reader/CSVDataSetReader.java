@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import util.linalg.DenseVector;
 import shared.DataSet;
 import shared.DataSetDescription;
 import shared.Instance;
@@ -42,8 +43,8 @@ public class CSVDataSetReader extends DataSetReader {
         set.setDescription(new DataSetDescription(set));
         return set;
 	}
-	
-        public DataSet read(int label) throws Exception {
+    
+	public DataSet read(int label) throws Exception {
         BufferedReader br = new BufferedReader(new FileReader(file));
 
         String line;
@@ -69,4 +70,5 @@ public class CSVDataSetReader extends DataSetReader {
         set.setDescription(new DataSetDescription(set));
         return set;
 	}
+
 }

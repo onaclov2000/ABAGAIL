@@ -45,6 +45,21 @@ public class ArffDataSetReader extends DataSetReader {
 		}
 	}
 
+	@Override
+	public DataSet read(int label) throws Exception {
+		BufferedReader in = new BufferedReader(new FileReader(file));
+		try {
+    		List<Map<String, Double>> attributes = processAttributes(in);
+    		Instance[] instances = processInstances(in, attributes);
+    		DataSet set = new DataSet(instances);
+    		set.setDescription(new DataSetDescription(set));
+    		return set;
+		} finally {
+    		// don't forget to close the buffer
+    		in.close();
+		}
+	}
+    
 	/**
 	 * Parses the buffer in to a map attribute->
 	 * @param in Buffer to read from

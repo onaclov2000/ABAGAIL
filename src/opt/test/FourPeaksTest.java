@@ -53,85 +53,93 @@ public class FourPeaksTest {
         ProbabilisticOptimizationProblem pop = new GenericProbabilisticOptimizationProblem(ef, odd, df);
 
         FixedIterationTrainer fit = null;
-        double result[] = new double[30];
-	    double runtime[] = new double[30];
-
-        // for (int i=0; i<500; i++){
-	    // double start = System.nanoTime();
-            // RandomizedHillClimbing rhc = new RandomizedHillClimbing(hcp);      
-            // fit = new FixedIterationTrainer(rhc, 200000); // original 200000
-            // fit.train();
-            // result[i] = ef.value(rhc.getOptimal());
-	    // double end = System.nanoTime();
-	    // runtime[i] = (end - start)  / Math.pow(10,9);
-        // }
-        // System.out.println("RHC: " + Arrays.toString(result));
-        // System.out.println("Runtime: " + Arrays.toString(runtime));
-
-        // double temperature[] = new double[500];
-        // double cooling[] = new double[500];
-        // for (int i=0; i<500; i++){
-	    // double start = System.nanoTime();
-            // temperature[i] = random.nextDouble() * 2E12;
-            // cooling[i] = random.nextDouble();
-            // SimulatedAnnealing sa = new SimulatedAnnealing(temperature[i], cooling[i], hcp);
-            // fit = new FixedIterationTrainer(sa, 200000);
-            // fit.train();
-            // result[i] = ef.value(sa.getOptimal());
-	    // double end = System.nanoTime();
-	    // runtime[i] = (end - start)  / Math.pow(10,9);
-        // }
-        // System.out.println("SA: " + Arrays.toString(result));
-        // System.out.println("T: " + Arrays.toString(temperature));
-        // System.out.println("C: " + Arrays.toString(cooling));
-        // System.out.println("Runtime: " + Arrays.toString(runtime));
-        
-        // int populationSize[] = new int[500];
-        // int toMate[] = new int[500];
-        // int toMutate[] = new int[500];
-        
-        // for (int i=0; i<500; i++){
-    	    // double start = System.nanoTime();
-            // //int populationSize, int toMate, int toMutate
-            // populationSize[i] = random.nextInt(500) + 2;
-            // toMate[i] = random.nextInt(populationSize[i]);
-            // toMutate[i] = random.nextInt(10);
-            // StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(populationSize[i], toMate[i], toMutate[i], gap);
-            // fit = new FixedIterationTrainer(ga, 1000);
-            // fit.train();
-            // result[i] = ef.value(ga.getOptimal());
-	        // double end = System.nanoTime();
-	        // runtime[i] = (end - start)  / Math.pow(10,9);
-        // }
-        // System.out.println("GA: " + Arrays.toString(result));
-        // System.out.println("populationSize: " + Arrays.toString(populationSize));
-        // System.out.println("toMate: " + Arrays.toString(toMate));
-        // System.out.println("toMutate: " + Arrays.toString(toMutate));
-  	    // System.out.println("Runtime: " + Arrays.toString(runtime));
-        
+        double result[] = new double[1000];
+	    double runtime[] = new double[1000];
+/*for (int n=0; n<100; n++){
+         RandomizedHillClimbing rhc = new RandomizedHillClimbing(hcp); 
+         System.out.println("Starting Point: " + ef.value(rhc.getOptimal()));
+         for (int i=1; i<100; i++){
+	     double start = System.nanoTime();     
+             fit = new FixedIterationTrainer(rhc, i * 200); // original 200000
+             fit.train();
+             result[i] = ef.value(rhc.getOptimal());
+	     double end = System.nanoTime();
+	     runtime[i] = (end - start)  / Math.pow(10,9);
+        }
+        System.out.println("RHC: " + Arrays.toString(result));
+        System.out.println("Runtime: " + Arrays.toString(runtime));
+}
+*/
+        double temperature[] = new double[500];
+        double cooling[] = new double[500];
+        for (int n = 0; n < 100; n++){
+             temperature[n] = random.nextDouble() * 2E12;
+             cooling[n] = random.nextDouble();
+             SimulatedAnnealing sa = new SimulatedAnnealing(temperature[n], cooling[n], hcp);
+         for (int i=1; i<1000; i++){
+	     double start = System.nanoTime();
+             fit = new FixedIterationTrainer(sa, i * 200);
+             fit.train();
+             result[i] = ef.value(sa.getOptimal());
+	     double end = System.nanoTime();
+	     runtime[i] = (end - start)  / Math.pow(10,9);
+         }
+         System.out.println("SA: " + Arrays.toString(result));
+         System.out.println("T: " + temperature[n]);
+         System.out.println("C: " + cooling[n]);
+         System.out.println("Runtime: " + Arrays.toString(runtime));
+        }
+/*
+         int populationSize[] = new int[100];
+         int toMate[] = new int[100];
+         int toMutate[] = new int[100];
+        for (int n = 0; n<100; n++){
+    //int populationSize, int toMate, int toMutate
+             populationSize[n] = random.nextInt(500) + 2;
+             toMate[n] = random.nextInt(populationSize[n]);
+             toMutate[n] = random.nextInt(10);
+             StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(populationSize[n], toMate[n], toMutate[n], gap);
+         for (int i=1; i<100; i++){
+    	     double start = System.nanoTime();
+             fit = new FixedIterationTrainer(ga, i * 10);
+             fit.train();
+             result[i] = ef.value(ga.getOptimal());
+	         double end = System.nanoTime();
+	         runtime[i] = (end - start)  / Math.pow(10,9);
+         }
+         System.out.println("GA: " + Arrays.toString(result));
+         System.out.println("populationSize: " + populationSize[n]);
+         System.out.println("toMate: " + toMate[n]);
+         System.out.println("toMutate: " + toMutate[n]);
+  	 System.out.println("Runtime: " + Arrays.toString(runtime));
+        }
+*/
+/*
     	int samples[] = new int[100];
-	    int tokeep[] = new int[100];
-	
+	int tokeep[] = new int[100];
+         for (int n = 0; n<100; n++){
+           samples[n] = random.nextInt(200);
+           if (samples[n] <= 0){
+                samples[n] = samples[n] * -1;
+            }
+            tokeep[n] = random.nextInt(samples[n]-1);
+            MIMIC mimic = new MIMIC(samples[n], tokeep[n], pop);
         // int samples, int tokeep
-	    for (int i = 1; i < 30; i++){
-		    double start = System.nanoTime();	
-           // samples[i] = random.nextInt(200);
-		   // if (samples[i] <= 0){
-           //     samples[i] = samples[i] * -1;
-          //  }
-          //  tokeep[i] = random.nextInt(samples[i]);
-            MIMIC mimic = new MIMIC(200, 100, pop);
-  	  	    fit = new FixedIterationTrainer(mimic, i * 10);
-     	    fit.train();
-		    result[i] = ef.value(mimic.getOptimal());
+	    for (int i = 1; i < 100; i++){
+		    double start = System.nanoTime();
+                    
+  	            fit = new FixedIterationTrainer(mimic, i * 1000);
+     	            fit.train();
+	            result[i] = ef.value(mimic.getOptimal());
 		    double end = System.nanoTime();
 		    runtime[i] = (end - start)  / Math.pow(10,9);
-    }
+             }
   	System.out.println("MIMIC: " + Arrays.toString(result));
-  	//System.out.println("samples: " + Arrays.toString(samples));
-  //	System.out.println("tokeep: " + Arrays.toString(tokeep));
+  	System.out.println("sample: " + samples[n]);
+  	System.out.println("tokeep: " + tokeep[n]);
   	System.out.println("Runtime: " + Arrays.toString(runtime));
-		
+	}
+*/	
     }
 }
 

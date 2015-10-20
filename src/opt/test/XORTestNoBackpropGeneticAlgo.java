@@ -74,7 +74,7 @@ public class XORTestNoBackpropGeneticAlgo {
         //    optimal weights found for this network.
         Instance opt = o.getOptimal();
         network.setWeights(opt.getData());
-        
+        System.out.println(opt.getData().toString());
         //10) Run the training data through the network with the weights discovered through optimization, and
         //    print out the expected label and result of the classifier for each instance.
         for (int i = 0; i < patterns.length; i++) {
